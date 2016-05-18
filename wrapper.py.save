@@ -1,0 +1,56 @@
+#!/usr/bin/python
+print "Content-Type: text/html\n" 
+print ""
+import cgi
+import cgitb
+cgitb.enable()
+execfile("coll.py")
+def FStoD():
+    '''
+    Converts cgi.FieldStorage() return value into a standard dictionary
+    '''
+    d = {}
+    formData = cgi.FieldStorage()
+    for k in formData.keys():
+        d[k] = formData[k].value
+    return d    
+d = FStoD()
+compName = d['comp']
+stockList = DictMaker()
+stock = stockList[compName]
+print stock
+stocksToPull = ['^TYX','^GSPC',stock,'AAPL']
+execfile("alpha.py")
+listostock(stocksToPull)
+graph = stock + '.png'
+funds =0
+grapher(stock,12,26)
+descrip = 0
+print descrip
+stdev = stdev(stockdict[stock][2])
+print stdev
+print stock
+print '<html><img src="HQH.png"></html>'
+beta1 = beta('AAPL')
+print beta1
+CAPM1 = CAPM(stock)
+print CAPM1
+sharpe1 = sharpe(stock)
+print sharpe1
+##making of the htmlStr##
+htmlStr = "<!Doctype html>"
+htmlStr += "<html><head><title>" + str(stock) +  "</title></head></html>\n"
+htmlStr += "<head> <link rel='stylesheet' src='endStyle.css'> <script src='script.js'></script></head>"
+htmlStr += "<body> <h1>" + '"' + str(stock) + '"' + "</h1><br> <h3>" + str(compName) + "</h3> <br>"
+htmlStr += str(descrip) + "<br>"
+htmlStr += "<ul class='tabs' data-tab role='tablist'>"
+htmlStr += "<li class='tab-title active' role='presentational' ><a href='#panel2-1' role='tab' tabindex='0' aria-selected='true' controls='panel2-1'>Graph</a></li>"
+htmlStr += "<li class='tab-title' role='presentational' ><a href='#panel2-2' role='tab' tabindex='0' aria-selected='false' controls='panel2-2'>Funamentals</a></li>"
+htmlStr += "<li class='tab-title' role='presentational' ><a href='#panel2-3' role='tab' tabindex='0' aria-selected='false' controls='panel2-3'>Extra Stats</a></li></ul>"
+htmlStr += "<div class='tabs-content'> <section role='tabpanel' aria-hidden='false' class='content active' id='panel2-1'> <center><img src='" + str(graph) +"'></center> </section> <section role='tabpanel' aria-hidden='true' class='content' id='panel2-2'><center "+ str(funds) +"</center> </section> \
+  <section role='tabpanel' aria-hidden='true' class='content' id='panel2-3'> \
+    <center> <table border=1> <tr> <td> Standar Deviation</td> <td>" + str(stdev) + "</td> </tr> <tr> <td> Sharpe </td> <td>" + str(sharpe) + "</td> \
+    </tr> <tr> <td> Beta </td> <td>" + str(beta) + "</td> </tr> <tr> <td> CAPM </td> <td>" + str(CAPM) + "</td> </tr> </table> </center> \
+  </section> </div> </body> </html>"
+  
+print htmlStr
